@@ -1,11 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://n825j345khoi"]
+[gd_scene load_steps=4 format=3 uid="uid://n825j345khoi"]
 
 [ext_resource type="TileSet" path="res://UnitOverlay/unit_overlay_tileset.tres" id="1"]
+[ext_resource type="Material" uid="uid://thmfisdi6rql" path="res://UnitOverlay/unlit_canvas_item_material.tres" id="1_3jj5f"]
 [ext_resource type="Script" path="res://UnitOverlay/UnitOverlay.gd" id="2"]
 
 [node name="UnitOverlay" type="TileMap"]
 modulate = Color(1, 1, 1, 0.329412)
 light_mask = 0
+material = ExtResource("1_3jj5f")
 tile_set = ExtResource("1")
 format = 2
 script = ExtResource("2")

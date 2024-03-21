@@ -4,12 +4,12 @@
 
 [resource]
 shader = ExtResource("1_4mi0u")
-shader_parameter/OCTAVE = 6
-shader_parameter/mulscale = 5.0
-shader_parameter/height = 0.6
-shader_parameter/tide = 0.1
-shader_parameter/foamthickness = 0.1
-shader_parameter/timescale = 1.0
+shader_parameter/OCTAVE = 4
+shader_parameter/mulscale = 9.82
+shader_parameter/height = 0.65
+shader_parameter/tide = 0.08
+shader_parameter/foamthickness = 0.155
+shader_parameter/timescale = 1.15
 shader_parameter/waterdeep = 0.3
 shader_parameter/WATER_COL = Vector4(0.04, 0.38, 0.88, 1)
 shader_parameter/WATER2_COL = Vector4(0.04, 0.35, 0.78, 1)

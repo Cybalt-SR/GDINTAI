@@ -50,7 +50,7 @@ void vertex() {
 
 void fragment(){
 	float newtime = TIME*timescale;
-	vec2 newUV = world_pos * 0.01;
+	vec2 newUV = world_pos * 0.005;
 	float fbmval = fbm(vec2(newUV.x*mulscale+0.2*sin(0.3*newtime)+0.15*newtime,-0.05*newtime+newUV.y*mulscale+0.1*cos(0.68*newtime)));
 	float fbmvalshadow = fbm(vec2(newUV.x*mulscale+0.2*sin(-0.6*newtime + 25.0 * newUV.y)+0.15*newtime+3.0,-0.05*newtime+newUV.y*mulscale+0.13*cos(-0.68*newtime))-7.0+0.1*sin(0.43*newtime));
 	float myheight = height+tide*sin(newtime+5.0*newUV.x-8.0*newUV.y);

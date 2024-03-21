@@ -61,7 +61,7 @@ func _reinitialize() -> void:
 		var unit := child as Unit
 		if not unit:
 			continue
-		_units[unit.cell] = unit
+		_units[unit.cell] = [unit]
 
 
 ## Returns an array with all the coordinates of walkable cells based on the `max_distance`.
@@ -106,13 +106,21 @@ func _move_active_unit(new_cell: Vector2) -> void:
 	var toDelete = null;
 
 	if(_units.has(new_cell)):
-		if(_units[new_cell] == _active_unit):
+		if(_units[new_cell].front() == _active_unit):
 			return;
 		else:
-			toDelete = _units[new_cell];
+			toDelete = _units[new_cell].front();
+			_units[new_cell].erase(toDelete);
 	
-	_units.erase(_active_unit.cell)
-	_units[new_cell] = _active_unit
+	_units[_active_unit.cell].erase(_active_unit)
+	if(_units[_active_unit.cell].size() == 0):
+		_units.erase(_active_unit.cell);
+	
+	if(_units.has(new_cell)):
+		_units[new_cell].append(_active_unit)
+	else:
+		_units[new_cell] = [_active_unit]
+	
 	_deselect_active_unit()
 	_active_unit.walk_along(_unit_path.current_path)
 	await _active_unit.walk_finished
@@ -127,7 +135,10 @@ func _select_unit(cell: Vector2) -> void:
 	if not _units.has(cell):
 		return
 
-	_active_unit = _units[cell]
+	if(_units[cell].front().move_range < 1):
+		return;
+
+	_active_unit = _units[cell].front()
 	_active_unit.is_selected = true
 	_walkable_cells = get_walkable_cells(_active_unit)
 	_unit_overlay.draw(_walkable_cells)
