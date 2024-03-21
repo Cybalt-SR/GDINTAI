@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://bv30que1oi0y3"]
+
+[ext_resource type="Texture2D" uid="uid://cqi3xkbk8630i" path="res://Background/Terrain block/terrain.png" id="1_uqk1a"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hp2nm"]
+radius = 49.57
+
+[node name="StaticBody2D" type="StaticBody2D"]
+
+[node name="Terrain block" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_hp2nm")
+
+[node name="Sprite2D" type="Sprite2D" parent="Terrain block"]
+scale = Vector2(3.055, 3.055)
+texture = ExtResource("1_uqk1a")
