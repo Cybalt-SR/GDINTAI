@@ -1,10 +1,22 @@
-[gd_scene load_steps=3 format=3 uid="uid://cvaqp7ospqa5b"]
+[gd_scene load_steps=5 format=3 uid="uid://cvaqp7ospqa5b"]
 
 [ext_resource type="Material" uid="uid://bo4du4g1pfsho" path="res://Background/Ocean/oceanMaterial.tres" id="1_1ijn1"]
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_h6ji5"]
 
+[sub_resource type="Gradient" id="Gradient_r4sah"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0, 1, 0.67451, 0.321569)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_nwhng"]
+gradient = SubResource("Gradient_r4sah")
+width = 1
+
 [node name="OceanTile" type="Sprite2D"]
 material = ExtResource("1_1ijn1")
 scale = Vector2(80, 80)
 texture = SubResource("CanvasTexture_h6ji5")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+z_index = 1
+texture = SubResource("GradientTexture1D_nwhng")
