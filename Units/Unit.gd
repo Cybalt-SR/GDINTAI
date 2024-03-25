@@ -1,34 +1,38 @@
-## Represents a unit on the game board.
-## The board manages its position inside the game grid.
-## The unit itself holds stats and a visual representation that moves smoothly in the game world.
 @tool
 class_name Unit
 extends Path2D
 
-## Emitted when the unit reached the end of a path along which it was walking.
 signal walk_finished
 
-## Shared resource of type Grid, used to calculate map coordinates.
+@export var teamName:String;
 @export var grid: Resource
-## Distance to which the unit can walk in cells.
 @export var move_range := 6
-## The unit's move speed when it's moving along a path.
 @export var move_speed := 600.0
-## Texture representing the unit.
 @export var skin: Texture:
 	set(value):
 		skin = value
 		if not _sprite:
-			# This will resume execution after this node's _ready()
 			await ready
 		_sprite.texture = value
-## Offset to apply to the `skin` sprite in pixels.
 @export var skin_offset := Vector2.ZERO:
 	set(value):
 		skin_offset = value
 		if not _sprite:
 			await ready
 		_sprite.position = value
+@export var lightColor : Color:
+	set(value):
+		lightColor = value;
+		if not _light:
+			await ready
+		_light.color = value;
+@export var lightSize : float:
+	set(value):
+		lightSize = value;
+		if not _light:
+			await ready
+		_light.texture_scale = value;
+@export var bases : Array[Unit]
 
 ## Coordinates of the current cell the cursor moved to.
 var cell := Vector2.ZERO:
@@ -50,6 +54,7 @@ var _is_walking := false:
 		_is_walking = value
 		set_process(_is_walking)
 
+@onready var _light: PointLight2D = $PathFollow2D/PointLight2D
 @onready var _sprite: Sprite2D = $PathFollow2D/Sprite
 @onready var _anim_player: AnimationPlayer = $AnimationPlayer
 @onready var _path_follow: PathFollow2D = $PathFollow2D
@@ -57,7 +62,8 @@ var _is_walking := false:
 
 func _ready() -> void:
 	set_process(false)
-	_path_follow.rotates = false
+	_path_follow.rotates = true
+	_path_follow.cubic_interp = true
 
 	cell = grid.calculate_grid_coordinates(position)
 	position = grid.calculate_map_position(cell)
@@ -67,6 +73,9 @@ func _ready() -> void:
 	if not Engine.is_editor_hint():
 		curve = Curve2D.new()
 
+func goToCell(cellPos:Vector2):
+	cell = cellPos
+	position = grid.calculate_map_position(cell)
 
 func _process(delta: float) -> void:
 	_path_follow.progress += move_speed * delta

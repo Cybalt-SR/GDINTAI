@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://don6rhlapjhye"
-path="res://.godot/imported/bear.png-f745173ee5425f681c6601dde14ffd16.ctex"
+uid="uid://cr77t1tmc3iro"
+path="res://.godot/imported/Boat1_water_frame1.png-75414b5346670949a4a23c0942f48c2c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Units/Images/bear.png"
-dest_files=["res://.godot/imported/bear.png-f745173ee5425f681c6601dde14ffd16.ctex"]
+source_file="res://Units/Images/P boat/Boat1_water_frame1.png"
+dest_files=["res://.godot/imported/Boat1_water_frame1.png-75414b5346670949a4a23c0942f48c2c.ctex"]
 
 [params]
 

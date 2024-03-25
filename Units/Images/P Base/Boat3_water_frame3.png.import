@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ceanoo0yxcj8i"
-path="res://.godot/imported/squirrel.png-df2b718340068f326c5cfd53a5b493f5.ctex"
+uid="uid://cnqtjloy4yec"
+path="res://.godot/imported/Boat3_water_frame3.png-64b6b8fd3a59bf546e37c1ca18ef2c09.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Units/Images/squirrel.png"
-dest_files=["res://.godot/imported/squirrel.png-df2b718340068f326c5cfd53a5b493f5.ctex"]
+source_file="res://Units/Images/P Base/Boat3_water_frame3.png"
+dest_files=["res://.godot/imported/Boat3_water_frame3.png-64b6b8fd3a59bf546e37c1ca18ef2c09.ctex"]
 
 [params]
 

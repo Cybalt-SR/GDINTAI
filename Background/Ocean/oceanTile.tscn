@@ -6,7 +6,7 @@
 
 [sub_resource type="Gradient" id="Gradient_r4sah"]
 offsets = PackedFloat32Array(0)
-colors = PackedColorArray(0, 1, 0.67451, 0.321569)
+colors = PackedColorArray(0, 1, 0.67451, 0.145098)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_nwhng"]
 gradient = SubResource("Gradient_r4sah")
@@ -18,5 +18,5 @@ scale = Vector2(80, 80)
 texture = SubResource("CanvasTexture_h6ji5")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-z_index = 1
+z_index = 4
 texture = SubResource("GradientTexture1D_nwhng")

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cpg0g8as8jitw"
-path="res://.godot/imported/Boat2_water_frame4.png-83edaedc3f5e20461dea38b1e310529a.ctex"
+uid="uid://bfwqiulay0ir0"
+path="res://.godot/imported/Boat3_water_frame2.png-9ac7138243065fc0a868d7d2a1e8506c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Units/Images/Boat2_water_animation_color2/Boat2_water_frame4.png"
-dest_files=["res://.godot/imported/Boat2_water_frame4.png-83edaedc3f5e20461dea38b1e310529a.ctex"]
+source_file="res://Units/Images/P Base/Boat3_water_frame2.png"
+dest_files=["res://.godot/imported/Boat3_water_frame2.png-9ac7138243065fc0a868d7d2a1e8506c.ctex"]
 
 [params]
 

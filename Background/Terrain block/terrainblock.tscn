@@ -7,7 +7,7 @@ radius = 49.57
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_4f2j3"]
 cull_mode = 1
-polygon = PackedVector2Array(42, -18, 43, 36, 22, 48, -27, 49, -42, 34, -43, -15, 1, -46)
+polygon = PackedVector2Array(40, 40, -40, 40, -40, -40, 40, -40)
 
 [node name="StaticBody2D" type="StaticBody2D"]
 
@@ -15,7 +15,7 @@ polygon = PackedVector2Array(42, -18, 43, 36, 22, 48, -27, 49, -42, 34, -43, -15
 shape = SubResource("CircleShape2D_hp2nm")
 
 [node name="Sprite2D" type="Sprite2D" parent="Terrain block"]
-scale = Vector2(3.055, 3.055)
+scale = Vector2(2.545, 2.545)
 texture = ExtResource("1_uqk1a")
 
 [node name="LightOccluder2D" type="LightOccluder2D" parent="."]

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dhvxdwlc2anrg"
-path="res://.godot/imported/Boat1_water_frame3.png-f4086c6f09b9d373dac7ab33cdc48d30.ctex"
+path="res://.godot/imported/Boat1_water_frame3.png-2a864e2e77cff1ddf777229a7c7106be.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Units/Images/Boat1_water_animation_color1/Boat1_water_frame3.png"
-dest_files=["res://.godot/imported/Boat1_water_frame3.png-f4086c6f09b9d373dac7ab33cdc48d30.ctex"]
+source_file="res://Units/Images/P boat/Boat1_water_frame3.png"
+dest_files=["res://.godot/imported/Boat1_water_frame3.png-2a864e2e77cff1ddf777229a7c7106be.ctex"]
 
 [params]
 

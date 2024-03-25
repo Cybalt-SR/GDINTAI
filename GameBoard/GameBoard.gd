@@ -6,17 +6,19 @@ extends Node2D
 
 const DIRECTIONS = [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]
 
+
 ## Resource of type Grid.
 @export var grid:Grid
 
 ## Mapping of coordinates of a cell to a reference to the unit it contains.
 var _units := {}
 var _active_unit: Unit
-var _walkable_cells := []
+var _walkable_cells:Array[Vector2] = [];
+var _teams:Array[Array];
+var _cur_turn := 0;
 
 @onready var _unit_overlay: UnitOverlay = $UnitOverlay
 @onready var _unit_path: UnitPath = $UnitPath
-
 
 func _ready() -> void:
 	_reinitialize()
@@ -48,70 +50,80 @@ func is_occupied(cell: Vector2) -> bool:
 	return false;
 
 
-## Returns an array of cells a given unit can walk using the flood fill algorithm.
-func get_walkable_cells(unit: Unit) -> Array:
-	return _flood_fill(unit.cell, unit.move_range)
-
-
 ## Clears, and refills the `_units` dictionary with game objects that are on the board.
 func _reinitialize() -> void:
+	_walkable_cells.clear();
+	
+	for x in grid.size.x:
+		for y in grid.size.y:
+			var curPos := Vector2(x,y);
+			if(grid.is_within_bounds(curPos) && !is_occupied(curPos)):
+				_walkable_cells.append(curPos);
+	
+	_unit_path.initialize(_walkable_cells)
+	
 	_units.clear()
-
+	_teams.clear();
+	
+	
 	for child in get_children():
 		var unit := child as Unit
 		if not unit:
 			continue
+		var alrAdded := false;
+		for team:Array[Unit] in _teams:
+			if(team[0].teamName == unit.teamName):
+				team.append(unit);
+				alrAdded = true;
+				
+		if(alrAdded == false):
+			_teams.append([unit]);
+			
 		_units[unit.cell] = [unit]
 
+#returns true if it successfully eliminated something
+func standOnCell(new_cell: Vector2):
+	var toRemove:Array[Unit];
+	var displacedSmth := false;
+	
+	if(_units.has(new_cell)):
+		for unitHere:Unit in _units[new_cell]:
+			if(unitHere == _active_unit):
+				continue;
+			toRemove.append(unitHere);
+	
+	for	removee:Unit in toRemove:
+		if(_active_unit.bases.has(removee)):
+			continue;
+		
+		_units[new_cell].erase(removee);
+		var validRespawnPoints:Array[Unit];
+		
+		for base:Unit in removee.bases:
+			if(is_instance_valid(base)):
+				validRespawnPoints.append(base);
+		
+		if(validRespawnPoints.size() > 0):
+			var randomChoice:int = randi_range(0, validRespawnPoints.size() - 1);
+			var chosenBase := validRespawnPoints[randomChoice];
+			removee.goToCell(chosenBase.cell);
+			_units[chosenBase.cell].append(removee);
+		else:
+			removee.free();
+			
+		displacedSmth = true;
 
-## Returns an array with all the coordinates of walkable cells based on the `max_distance`.
-func _flood_fill(cell: Vector2, max_distance: int) -> Array:
-	var array := []
-	var stack := [cell]
-	while not stack.size() == 0:
-		var current = stack.pop_back()
-		if not grid.is_within_bounds(current):
-			continue
-		if current in array:
-			continue
-
-		var difference: Vector2 = (current - cell).abs()
-		var distance := int(difference.x + difference.y)
-		if distance > max_distance:
-			continue
-
-		array.append(current)
-		for direction in DIRECTIONS:
-			var coordinates: Vector2 = current + direction
-			if is_occupied(coordinates):
-				continue
-			if coordinates in array:
-				continue
-			# Minor optimization: If this neighbor is already queued
-			#	to be checked, we don't need to queue it again
-			if coordinates in stack:
-				continue
-
-			stack.append(coordinates)
-	return array
-
+	if(toRemove.size() > 0):
+		return displacedSmth;
 
 ## Updates the _units dictionary with the target position for the unit and asks the _active_unit to walk to it.
 func _move_active_unit(new_cell: Vector2) -> void:
-	
-	if is_occupied(new_cell) or not new_cell in _walkable_cells:
+	if is_occupied(new_cell) or not new_cell in _walkable_cells or _active_unit.cell == new_cell:
+		_deselect_active_unit()
+		_clear_active_unit()
 		return
 	# warning-ignore:return_value_discarded
-	
-	var toDelete = null;
-
-	if(_units.has(new_cell)):
-		if(_units[new_cell].front() == _active_unit):
-			return;
-		else:
-			toDelete = _units[new_cell].front();
-			_units[new_cell].erase(toDelete);
-	
+		
 	_units[_active_unit.cell].erase(_active_unit)
 	if(_units[_active_unit.cell].size() == 0):
 		_units.erase(_active_unit.cell);
@@ -124,25 +136,32 @@ func _move_active_unit(new_cell: Vector2) -> void:
 	_deselect_active_unit()
 	_active_unit.walk_along(_unit_path.current_path)
 	await _active_unit.walk_finished
+	
+	while(standOnCell(new_cell)):
+		pass;
+	
 	_clear_active_unit()
-
-	if(toDelete != null):
-		toDelete.queue_free();
+	_cur_turn += 1;
+	_cur_turn %= _teams.size();
 
 ## Selects the unit in the `cell` if there's one there.
 ## Sets it as the `_active_unit` and draws its walkable cells and interactive move path. 
 func _select_unit(cell: Vector2) -> void:
 	if not _units.has(cell):
 		return
+	
+	for	unitHere:Unit in _units[cell]:
+		if(unitHere.move_range < 1):
+			continue;
+			
+		if _teams[_cur_turn][0].teamName != unitHere.teamName:
+			continue;
 
-	if(_units[cell].front().move_range < 1):
+		_active_unit = unitHere
+		_active_unit.is_selected = true
+		_unit_overlay.draw(_walkable_cells)
+		
 		return;
-
-	_active_unit = _units[cell].front()
-	_active_unit.is_selected = true
-	_walkable_cells = get_walkable_cells(_active_unit)
-	_unit_overlay.draw(_walkable_cells)
-	_unit_path.initialize(_walkable_cells)
 
 
 ## Deselects the active unit, clearing the cells overlay and interactive path drawing.
@@ -169,4 +188,4 @@ func _on_Cursor_accept_pressed(cell: Vector2) -> void:
 ## Updates the interactive path's drawing if there's an active and selected unit.
 func _on_Cursor_moved(new_cell: Vector2) -> void:
 	if _active_unit and _active_unit.is_selected:
-		_unit_path.draw(_active_unit.cell, new_cell)
+		_unit_path.draw(_active_unit.cell, new_cell, _active_unit.move_range)
