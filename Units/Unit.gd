@@ -3,7 +3,10 @@ class_name Unit
 extends Path2D
 
 signal walk_finished
+signal killed(by:Unit);
+signal stepover(by:Unit);
 
+var gameBoard:GameBoard;
 @export var teamName:String;
 @export var grid: Resource
 @export var move_range := 6
@@ -86,7 +89,7 @@ func _process(delta: float) -> void:
 		_path_follow.progress = 0.00001
 		position = grid.calculate_map_position(cell)
 		curve.clear_points()
-		emit_signal("walk_finished")
+		walk_finished.emit()
 
 
 ## Starts walking along the `path`.

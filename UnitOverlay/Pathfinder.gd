@@ -24,8 +24,16 @@ func _init(grid: Grid, walkable_cells: Array) -> void:
 			if not walkable_cells.has(Vector2(x,y)):
 				_astar.set_point_solid(Vector2(x,y))
 
+func calculate_point_path(start: Vector2, end: Vector2):
+	return _astar.get_id_path(start, end);
+
 ## Returns the path found between `start` and `end` as an array of Vector2 coordinates.
-func calculate_point_path(start: Vector2, end: Vector2) -> PackedVector2Array:
+func calculate_point_path_bound(start: Vector2, end: Vector2, range:int) -> PackedVector2Array:
 	# With an AStarGrid2D, we only need to call get_id_path to return
 	#	the expected array
-	return _astar.get_id_path(start, end)
+	var path := _astar.get_id_path(start, end);
+	
+	if(path.size() > range):
+		path.resize(range);
+	
+	return path;

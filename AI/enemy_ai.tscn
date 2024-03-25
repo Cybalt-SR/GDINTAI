@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://bi72be7b3cdvs"]
+
+[ext_resource type="Script" path="res://AI/EnemyAI.gd" id="1_vhprt"]
+
+[node name="Enemy AI" type="Node" node_paths=PackedStringArray("gameBoard")]
+script = ExtResource("1_vhprt")
+teamName = "enemy"
+gameBoard = NodePath("")

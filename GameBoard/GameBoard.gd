@@ -9,12 +9,13 @@ const DIRECTIONS = [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]
 
 ## Resource of type Grid.
 @export var grid:Grid
+@export var spawnables:Array[PackedScene];
 
 ## Mapping of coordinates of a cell to a reference to the unit it contains.
 var _units := {}
 var _active_unit: Unit
 var _walkable_cells:Array[Vector2] = [];
-var _teams:Array[Array];
+var _teams := {};
 var _cur_turn := 0;
 
 @onready var _unit_overlay: UnitOverlay = $UnitOverlay
@@ -23,19 +24,16 @@ var _cur_turn := 0;
 func _ready() -> void:
 	_reinitialize()
 
-
 func _unhandled_input(event: InputEvent) -> void:
 	if _active_unit and event.is_action_pressed("ui_cancel"):
 		_deselect_active_unit()
 		_clear_active_unit()
-
 
 func _get_configuration_warning() -> String:
 	var warning := ""
 	if not grid:
 		warning = "You need a Grid resource for this node to work."
 	return warning
-
 
 ## Returns `true` if the cell is occupied by a unit.
 func is_occupied(cell: Vector2) -> bool:
@@ -49,9 +47,7 @@ func is_occupied(cell: Vector2) -> bool:
 		
 	return false;
 
-
-## Clears, and refills the `_units` dictionary with game objects that are on the board.
-func _reinitialize() -> void:
+func _updateWalkables():
 	_walkable_cells.clear();
 	
 	for x in grid.size.x:
@@ -61,25 +57,49 @@ func _reinitialize() -> void:
 				_walkable_cells.append(curPos);
 	
 	_unit_path.initialize(_walkable_cells)
-	
+
+## Clears, and refills the `_units` dictionary with game objects that are on the board.
+func _reinitialize() -> void:
+	_updateWalkables();
 	_units.clear()
 	_teams.clear();
-	
 	
 	for child in get_children():
 		var unit := child as Unit
 		if not unit:
 			continue
 		var alrAdded := false;
-		for team:Array[Unit] in _teams:
-			if(team[0].teamName == unit.teamName):
-				team.append(unit);
+		for teamName in _teams:
+			if(teamName == unit.teamName):
+				_teams[teamName].append(unit);
 				alrAdded = true;
 				
 		if(alrAdded == false):
-			_teams.append([unit]);
-			
-		_units[unit.cell] = [unit]
+			_teams[unit.teamName] = [unit];
+		
+		if(_units.has(unit.cell)):
+			_units[unit.cell].append(unit);
+		else:
+			_units[unit.cell] = [unit]
+
+func _killUnit(unit:Unit):
+	_units[unit.cell].erase(unit);
+	var validRespawnPoints:Array[Unit];
+	
+	for base:Unit in unit.bases:
+		if(is_instance_valid(base)):
+			validRespawnPoints.append(base);
+	
+	if(validRespawnPoints.size() > 0):
+		var randomChoice:int = randi_range(0, validRespawnPoints.size() - 1);
+		var chosenBase := validRespawnPoints[randomChoice];
+		unit.goToCell(chosenBase.cell);
+		_units[chosenBase.cell].append(unit);
+	else:
+		_teams[unit.teamName].erase(unit);
+		if(_teams[unit.teamName].size() == 1):
+			standOnCell(_teams[unit.teamName][0].cell);
+		unit.free();
 
 #returns true if it successfully eliminated something
 func standOnCell(new_cell: Vector2):
@@ -88,37 +108,36 @@ func standOnCell(new_cell: Vector2):
 	
 	if(_units.has(new_cell)):
 		for unitHere:Unit in _units[new_cell]:
-			if(unitHere == _active_unit):
+			if(unitHere.teamName == _active_unit.teamName):
 				continue;
 			toRemove.append(unitHere);
 	
 	for	removee:Unit in toRemove:
-		if(_active_unit.bases.has(removee)):
-			continue;
-		
-		_units[new_cell].erase(removee);
-		var validRespawnPoints:Array[Unit];
-		
-		for base:Unit in removee.bases:
-			if(is_instance_valid(base)):
-				validRespawnPoints.append(base);
-		
-		if(validRespawnPoints.size() > 0):
-			var randomChoice:int = randi_range(0, validRespawnPoints.size() - 1);
-			var chosenBase := validRespawnPoints[randomChoice];
-			removee.goToCell(chosenBase.cell);
-			_units[chosenBase.cell].append(removee);
-		else:
-			removee.free();
-			
+		_killUnit(removee);
 		displacedSmth = true;
 
 	if(toRemove.size() > 0):
 		return displacedSmth;
 
+func _get_current_team_turn():
+	var counter := 0;
+	for	key in _teams:
+		if(counter == _cur_turn):
+			return key;
+		counter += 1;
+
+func _spawn_spawnable():
+	
+	pass;
+
 ## Updates the _units dictionary with the target position for the unit and asks the _active_unit to walk to it.
-func _move_active_unit(new_cell: Vector2) -> void:
-	if is_occupied(new_cell) or not new_cell in _walkable_cells or _active_unit.cell == new_cell:
+func _move_active_unit() -> void:
+	if(_unit_path.current_path.size() == 0):
+		return;
+		
+	var new_cell := _unit_path.current_path[-1];
+	
+	if _active_unit.cell == new_cell:
 		_deselect_active_unit()
 		_clear_active_unit()
 		return
@@ -141,8 +160,13 @@ func _move_active_unit(new_cell: Vector2) -> void:
 		pass;
 	
 	_clear_active_unit()
-	_cur_turn += 1;
-	_cur_turn %= _teams.size();
+	
+	var foundValidTurner := false;
+	while !foundValidTurner:
+		_cur_turn += 1;
+		_cur_turn %= _teams.size();
+		
+		foundValidTurner = _teams[_get_current_team_turn()].size() > 0;
 
 ## Selects the unit in the `cell` if there's one there.
 ## Sets it as the `_active_unit` and draws its walkable cells and interactive move path. 
@@ -154,12 +178,13 @@ func _select_unit(cell: Vector2) -> void:
 		if(unitHere.move_range < 1):
 			continue;
 			
-		if _teams[_cur_turn][0].teamName != unitHere.teamName:
+		if _get_current_team_turn() != unitHere.teamName:
 			continue;
 
+		_updateWalkables();	
+		
 		_active_unit = unitHere
 		_active_unit.is_selected = true
-		_unit_overlay.draw(_walkable_cells)
 		
 		return;
 
@@ -182,7 +207,7 @@ func _on_Cursor_accept_pressed(cell: Vector2) -> void:
 	if not _active_unit:
 		_select_unit(cell)
 	elif _active_unit.is_selected:
-		_move_active_unit(cell)
+		_move_active_unit()
 
 
 ## Updates the interactive path's drawing if there's an active and selected unit.

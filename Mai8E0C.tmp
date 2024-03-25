@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://30jb4kc5kf5p"]
+[gd_scene load_steps=12 format=3 uid="uid://30jb4kc5kf5p"]
 
 [ext_resource type="PackedScene" uid="uid://bv1ul1qynrdwd" path="res://GameBoard/Cursor/Cursor.tscn" id="1"]
 [ext_resource type="Script" path="res://GameBoard/GameLoader.gd" id="1_5ofvb"]
@@ -9,7 +9,6 @@
 [ext_resource type="PackedScene" uid="uid://n825j345khoi" path="res://UnitOverlay/UnitOverlay.tscn" id="5"]
 [ext_resource type="PackedScene" uid="uid://dxyfefsgkgc4l" path="res://UnitOverlay/UnitPath.tscn" id="6"]
 [ext_resource type="Texture2D" uid="uid://b4pkhdyq464ic" path="res://Units/Images/E boat/Boat2_water_frame1.png" id="9_aejk0"]
-[ext_resource type="PackedScene" uid="uid://bmthh4loipqyc" path="res://Units/spawnables/mine.tscn" id="9_vvryj"]
 [ext_resource type="PackedScene" uid="uid://de53ukdqyusan" path="res://Background/Map.tscn" id="10"]
 [ext_resource type="Texture2D" uid="uid://cbhjd5eod53hg" path="res://Units/Images/P Base/Boat3_water_frame1.png" id="10_af7cv"]
 
@@ -38,7 +37,6 @@ layer_1/tile_data = PackedInt32Array(131076, 2, 131072, 131077, 2, 131072, 19661
 [node name="GameBoard" type="Node2D" parent="."]
 script = ExtResource("3")
 grid = ExtResource("4")
-spawnables = Array[PackedScene]([ExtResource("9_vvryj")])
 
 [node name="UnitOverlay" parent="GameBoard" instance=ExtResource("5")]
 visible = false
