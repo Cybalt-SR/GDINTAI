@@ -68,6 +68,12 @@ func _process(delta):
 						distanceToHere = curDist;
 			priorityDictionary[key] += 500.0 / distanceToHere;	
 		
+		#prune all positions in which there is no need to move
+		for key in priorityDictionary:
+			for aiUnit in aiTeam:
+				if(aiUnit.move_range > 0 && aiUnit.cell == key):
+					priorityDictionary[key] = -1;
+		
 		#pick priotity
 		var mostPrioritizedPosition:Vector2;
 		var highestPriority := 0;

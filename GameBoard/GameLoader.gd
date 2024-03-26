@@ -15,18 +15,26 @@ var loadedin := false;
 var isEvE := false;
 
 func _ready():
-	_InitGame({
+	var twoplayerdict := {
 	"0": "PLAYER",
 	"1": "PLAYER",
-	},
-	{
+	}
+	var fourAIdict := {
+	"0": "AI",
+	"1": "AI",
+	"2": "AI",
+	"3": "AI",
+	}
+	var oneVoneList:Array[int] = [0,1]
+	var freeFourAllList:Array[int] = [0,1,2,3]
+	var universalColorCode :={
 	"0": Color.GREEN,
 	"1": Color.RED,
-	},
-	[
-		0,
-		1,
-	]);
+	"2": Color.YELLOW,
+	"3": Color.VIOLET,
+	}
+	
+	_InitGame(fourAIdict, universalColorCode, freeFourAllList, 5);
 
 func _pop_pos(from:Array[Vector2]) -> Vector2:
 	var randomIndex := randi_range(0, from.size() - 1);
@@ -77,7 +85,7 @@ func _spawnAI(team:String):
 	
 	add_child(instance);
 
-func _InitGame(teamControl:Dictionary, teamColors:Dictionary, playerList:Array[int]):
+func _InitGame(teamControl:Dictionary, teamColors:Dictionary, playerList:Array[int], baseCount:int):
 	isEvE = true;
 	
 	for controllerIndex in teamControl:
@@ -96,7 +104,6 @@ func _InitGame(teamControl:Dictionary, teamColors:Dictionary, playerList:Array[i
 	for teamName in teamControl:
 		var bases:Array[Unit] = [];
 		var basePoses:Array[Vector2] = [];
-		var baseCount := 3;
 		
 		for i_base in baseCount:
 			var basePos := _pop_pos(_spawnableNodes);

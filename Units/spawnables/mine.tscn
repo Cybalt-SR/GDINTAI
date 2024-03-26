@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://bmthh4loipqyc"]
 
 [ext_resource type="Script" path="res://Units/spawnables/mine.gd" id="1_s4wxd"]
-[ext_resource type="Texture2D" uid="uid://cansjd7oqbysh" path="res://icon.png" id="2_2fu6m"]
+[ext_resource type="Texture2D" uid="uid://dghu8886c8dt3" path="res://Units/Images/Grab icon.png" id="2_ksv5p"]
 
 [sub_resource type="Gradient" id="Gradient_frhgj"]
 interpolation_mode = 2
@@ -52,14 +52,18 @@ _data = {
 
 [node name="Unit" type="Path2D"]
 script = ExtResource("1_s4wxd")
-skin = ExtResource("2_2fu6m")
-lightSize = 5.0
+teamName = "spawn"
+move_range = 0
+skin = ExtResource("2_ksv5p")
+lightColor = Color(15.385, 0, 0, 1)
+lightSize = 1.955
 
 [node name="PathFollow2D" type="PathFollow2D" parent="."]
 loop = false
 
 [node name="Sprite" type="Sprite2D" parent="PathFollow2D"]
 rotation = -1.5708
+scale = Vector2(2.28, 2.28)
 
 [node name="PointLight2D" type="PointLight2D" parent="PathFollow2D"]
 energy = 0.8

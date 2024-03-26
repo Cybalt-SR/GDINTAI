@@ -8,7 +8,7 @@ signal stepover(by:Unit);
 
 var gameBoard:GameBoard;
 @export var teamName:String;
-@export var grid: Resource
+@export var grid: Grid
 @export var move_range := 6
 @export var move_speed := 600.0
 @export var skin: Texture:
@@ -43,28 +43,19 @@ var cell := Vector2.ZERO:
 		# When changing the cell's value, we don't want to allow coordinates outside
 		#	the grid, so we clamp them
 		cell = grid.grid_clamp(value)
-## Toggles the "selected" animation on the unit.
-var is_selected := false:
-	set(value):
-		is_selected = value
-		if is_selected:
-			_anim_player.play("selected")
-		else:
-			_anim_player.play("idle")
-
-var _is_walking := false:
-	set(value):
-		_is_walking = value
-		set_process(_is_walking)
+		position = grid.calculate_map_position(cell)
+	get:
+		return grid.calculate_grid_coordinates(position);
+var _is_walking := false;
+var _timeInvulnerable := 0.0;
 
 @onready var _light: PointLight2D = $PathFollow2D/PointLight2D
 @onready var _sprite: Sprite2D = $PathFollow2D/Sprite
 @onready var _anim_player: AnimationPlayer = $AnimationPlayer
 @onready var _path_follow: PathFollow2D = $PathFollow2D
-
+@onready var _shield_collider: CollisionShape2D = $StaticBody2D/CollisionShape2D;
 
 func _ready() -> void:
-	set_process(false)
 	_path_follow.rotates = true
 	_path_follow.cubic_interp = true
 
@@ -76,20 +67,27 @@ func _ready() -> void:
 	if not Engine.is_editor_hint():
 		curve = Curve2D.new()
 
-func goToCell(cellPos:Vector2):
-	cell = cellPos
-	position = grid.calculate_map_position(cell)
-
 func _process(delta: float) -> void:
-	_path_follow.progress += move_speed * delta
+	_timeInvulnerable -= delta;
+	
+	if(_shield_collider != null):
+		_shield_collider.disabled = _timeInvulnerable <= 0;
+	
+	if(_is_walking):
+		_path_follow.progress += move_speed * delta
+		
+		var curGridPos := grid.calculate_grid_coordinates(_path_follow.global_position);
+		for stepon:Unit in gameBoard._get_units_at_cell(curGridPos):
+			stepon.stepover.emit(self);
+		
+		if _path_follow.progress_ratio >= 1.0:
+			_is_walking = false
+			# Setting this value to 0.0 causes a Zero Length Interval error
+			_path_follow.progress = 0.00001
+			position = grid.calculate_map_position(cell)
+			curve.clear_points()
+			walk_finished.emit()
 
-	if _path_follow.progress_ratio >= 1.0:
-		_is_walking = false
-		# Setting this value to 0.0 causes a Zero Length Interval error
-		_path_follow.progress = 0.00001
-		position = grid.calculate_map_position(cell)
-		curve.clear_points()
-		walk_finished.emit()
 
 
 ## Starts walking along the `path`.
