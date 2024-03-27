@@ -1,6 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://bv30que1oi0y3"]
+[gd_scene load_steps=4 format=3 uid="uid://lraq01hnbfft"]
 
-[ext_resource type="Texture2D" uid="uid://cqi3xkbk8630i" path="res://Map/Terrain block/terrain.png" id="1_b7wr0"]
+[ext_resource type="Texture2D" uid="uid://cqi3xkbk8630i" path="res://Map/Terrain block/terrain.png" id="1_d1jl6"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_hp2nm"]
 radius = 49.57
@@ -16,7 +16,7 @@ shape = SubResource("CircleShape2D_hp2nm")
 
 [node name="Sprite2D" type="Sprite2D" parent="Terrain block"]
 scale = Vector2(2.545, 2.545)
-texture = ExtResource("1_b7wr0")
+texture = ExtResource("1_d1jl6")
 
 [node name="LightOccluder2D" type="LightOccluder2D" parent="."]
 occluder = SubResource("OccluderPolygon2D_4f2j3")

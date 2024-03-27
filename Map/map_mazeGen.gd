@@ -1,97 +1,73 @@
 extends TileMap
 
+@export var grid:Grid;
+@export var generate_on_ready = true
+@export var  MAZE_SIZE = Vector2(18,18)
+@export var  MAZE_POS = Vector2(1, 1)
+@export var WALL_ID = 2
+@export var PATH_ID = 1
+@export var LIMIT_ID = 3
+var tileLayer := 1;
 
-
-# Node references
-@export var tilemap:TileMap;
-
-# Randomizer & Dimension values ( make sure width & height is uneven)
-const initial_width = 21
-const initial_height = 21 
-var map_width = initial_width
-var map_height = initial_height 
-var map_offset = 0 #Shifts map four rows down for UI
-var rng = RandomNumberGenerator.new()
-
-# Tilemap constants
-const BACKGROUND_TILE_ID = 0
-const BREAKABLE_TILE_ID = 2
-const UNREAKABLE_TILE_ID = 2
-const BACKGROUND_TILE_LAYER = 0
-const BREAKABLE_TILE_LAYER = 1
-const UNREAKABLE_TILE_LAYER = 1
+const DIRECTIONS = [
+	Vector2.UP * 2,
+	Vector2.DOWN * 2,
+	Vector2.RIGHT * 2,
+	Vector2.LEFT * 2,
+]
+var current_cell = Vector2.ONE
+var visited_cells = [current_cell]
+var stack = []
 
 func _ready():
-	generate_map()
-	
-# ---------------- Map Generation -------------------------------------
-func generate_map():
-	#tilemap.set_cell(BREAKABLE_TILE_LAYER, Vector2(10, 10), 1);
-	#generate_unbreakables()
-	generate_breakables()
-	#generate_background()
+	current_cell += MAZE_POS - Vector2.ONE
+	if generate_on_ready:
+		generate_maze()
 
-# Checks if tiles are empty or not
-func is_cell_empty(layer, coords):
-	var data = tilemap.get_cell_tile_data(layer, coords)
-	return data == null
-	
-func generate_unbreakables():
-	#--------------------------------- UBREAKABLES ------------------------------
-	# Generate unbreakable walls at the borders on Layer 2
-	for x in range(map_width):
-		for y in range(map_height):
-			if x == 0 or x == map_width - 1 or y == 0 or y == map_height - 1:
-				tilemap.set_cell(UNREAKABLE_TILE_LAYER, Vector2i(x, y + map_offset), UNREAKABLE_TILE_ID, Vector2i(0, 0), 0)
-	# Generate solid walls in a grid on Layer 2, starting from (1, 1)
-	for x in range(1, map_width - 2):  # Stop before the last column
-		for y in range(1, map_height - 2):  # Stop before the last row
-			if x % 2 == 0 and y % 2 == 0: # Check if row and column are even
-				tilemap.set_cell(UNREAKABLE_TILE_LAYER, Vector2i(x, y + map_offset), UNREAKABLE_TILE_ID, Vector2i(0, 0), 0)
-	
-func generate_breakables():
-	#--------------------------------- BREAKABLES ------------------------------
-	# Define an array for the corners and their safe zones
-	var spawn_zones = [
-		# Near top-left corner
-		[Vector2i(1, 1 + map_offset), Vector2i(1, 2 + map_offset), Vector2i(1, 3 + map_offset)],
-		# Near top-right corner
-		[Vector2i(map_width - 2, 1 + map_offset), Vector2i(map_width - 2, 2 + map_offset), Vector2i(map_width - 2, 3 + map_offset)],
-		# Near bottom-left corner
-		[Vector2i(1, map_height - 2 + map_offset), Vector2i(1, map_height - 3 + map_offset), Vector2i(1, map_height - 4 + map_offset)],
-		# Near bottom-right corner
-		[Vector2i(map_width - 2, map_height - 2 + map_offset), Vector2i(map_width - 2, map_height - 3 + map_offset), Vector2i(map_width - 2, map_height - 4 + map_offset)]
-	]
+func _input(event):
+	if event.is_action_pressed("ui_accept"):
+		generate_maze()
 
-	# Randomly place breakable walls on Layer 1
-	rng.randomize()
-	for x in range(1, map_width - 1):
-		for y in range(1, map_height - 1):
-			var base_breakable_chance = 0.8  # default 20% chance
-			var breakable_spawn_chance = base_breakable_chance
-			breakable_spawn_chance = min(breakable_spawn_chance, 0.5) #max chance of 50%
-			var current_cell = Vector2i(x, y  + map_offset)
-			var skip_current_cell = false
-			# Skip cells where solid tiles are placed
-			if x % 2 == 0 and y % 2 == 0:
-				skip_current_cell = true
-			# Skip cells in the spawn_zones
-			for corner in spawn_zones:
-				if current_cell in corner:
-					skip_current_cell = true
-					break
-			if skip_current_cell:
-				continue
-			# Place breakables
-			if is_cell_empty(BREAKABLE_TILE_LAYER, current_cell):
-				if rng.randf() < breakable_spawn_chance: 
-					tilemap.set_cell(BREAKABLE_TILE_LAYER, current_cell, 2, Vector2i(0, 0), 2);
-					tilemap.erase_cell(BACKGROUND_TILE_LAYER, current_cell);
+### MAZE GENERATION ###
 
-func generate_background():
-	#--------------------------------- BACKGROUND ------------------------------
-	for x in range(map_width):
-		for y in range(map_height):
-			var cell_coords = Vector2i(x, y + map_offset)
-			if is_cell_empty(BREAKABLE_TILE_LAYER, cell_coords) and is_cell_empty(UNREAKABLE_TILE_LAYER, cell_coords):
-				tilemap.set_cell(BACKGROUND_TILE_LAYER, cell_coords, BACKGROUND_TILE_ID, Vector2i(0, 0), 0)
+func set_celli(x:int, y:int, id:int):
+	if(id == PATH_ID):
+		erase_cell(1, Vector2i(x, y));
+	else:
+		set_cell(1, Vector2i(x, y), id, Vector2i(0,0), id);
+
+func generate_maze():
+	#Clear the maze
+	visited_cells = [current_cell]
+	stack.clear()
+	# Create walls
+	for x in MAZE_SIZE.x:
+		for y in MAZE_SIZE.y:
+			set_celli(x+MAZE_POS.x, y+MAZE_POS.y, WALL_ID)
+	#create cells
+	var cellcount := 0;
+	for x in (MAZE_SIZE.x+1)/2:
+		for y in (MAZE_SIZE.y + 1)/2:
+			set_celli(MAZE_POS.x + 2 * x , MAZE_POS.y + 2 * y, PATH_ID)
+			cellcount += 1;
+	#get cells
+	#generate maze
+	while visited_cells.size() < cellcount:
+		var neighbours = neighbours_have_not_been_visited(current_cell)
+		if neighbours.size() > 0:
+			var random_neighbour = neighbours[randi()%neighbours.size()]
+			stack.push_front(current_cell)
+			var wall = (random_neighbour - current_cell)/2 + current_cell
+			set_celli(int(wall.x), int(wall.y), PATH_ID)
+			current_cell = random_neighbour
+			visited_cells.append(current_cell)
+		elif stack.size() > 0:
+			current_cell = stack[0]
+			stack.pop_front()
+
+func neighbours_have_not_been_visited(cell):
+	var neighbours = []
+	for dir in DIRECTIONS:
+		if !visited_cells.has(cell + dir) && grid.is_within_bounds(cell + dir):
+			neighbours.append(cell + dir)
+	return neighbours
