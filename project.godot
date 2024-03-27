@@ -25,6 +25,10 @@ window/stretch/mode="viewport"
 window/size/width=1280
 window/size/height=720
 
+[gui]
+
+theme/custom_font="res://CONSOLA.TTF"
+
 [input]
 
 move_right={

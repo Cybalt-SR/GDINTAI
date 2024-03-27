@@ -8,6 +8,8 @@ signal stepover(by:Unit);
 
 var gameBoard:GameBoard;
 @export var targetPriorityMod:float = 1;
+@export var targetPriorityMod_attack:float = 0;
+@export var targetPriorityMod_defend:float = 0;
 @export var teamName:String;
 @export var grid: Grid
 @export var move_range := 6

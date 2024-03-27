@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://cvaqp7ospqa5b"]
 
-[ext_resource type="Material" uid="uid://bo4du4g1pfsho" path="res://Background/Ocean/oceanMaterial.tres" id="1_1ijn1"]
+[ext_resource type="Material" uid="uid://bo4du4g1pfsho" path="res://Map/Ocean/oceanMaterial.tres" id="1_1ijn1"]
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_h6ji5"]
 

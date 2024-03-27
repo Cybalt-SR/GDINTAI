@@ -5,25 +5,34 @@ extends Control
 
 @export var infoLabel:Label;
 @export var winnerLabel:Label;
+@export var scoreLabel:Label;
 
-
+func _ready():
+	gameBoard._onWin.connect(_onWin);
+	pass
+	
+func _onWin(teamName:String):
+	winnerLabel.visible = true;
+	
+	if(teamName.length() > 0):
+		winnerLabel.text = "WINNER:" + teamName;
+	else:
+		winnerLabel.text = "DRAW";
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if(gameLoader.loadedin == false):
 		return;
 		
-	var newText:String = "";
+	infoLabel.text = "";
 	
-	newText = "Current Turn : " + gameBoard._get_current_team_turn() + "\n";
-	newText = newText + "Turn time left : " + str(gameBoard._turn_maxtime - gameBoard._turn_timer).substr(0, 3);
+	infoLabel.text = "Current Turn : " + gameBoard._get_current_team_turn();
+	infoLabel.text += "\n";
+	infoLabel.text += "Turn time left : " + str(gameBoard._turn_maxtime - gameBoard._turn_timer).substr(0, 3);
+	infoLabel.text += "\n";
+	infoLabel.text += "Game time left : " + str(gameBoard._game_maxtime - gameBoard._game_timer).substr(0, 5);
 	
-	infoLabel.text = newText;
+	scoreLabel.text = "";
+	for teamName in gameBoard._teamscore:
+		scoreLabel.text += teamName + ": " + str(gameBoard._teamscore[teamName]) + "\n";
 	
-	var teamsAlive := 0;
-	
-	for teamname in gameBoard._teams:
-		if(teamname != "spawn"):
-			
-			winnerLabel.visible = true;
-			winnerLabel.text = "WINNER:" + teamname;
 	pass

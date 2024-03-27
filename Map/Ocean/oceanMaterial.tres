@@ -1,6 +1,6 @@
 [gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://bo4du4g1pfsho"]
 
-[ext_resource type="Shader" path="res://Background/Ocean/oceanShader.gdshader" id="1_4mi0u"]
+[ext_resource type="Shader" path="res://Map/Ocean/oceanShader.gdshader" id="1_4mi0u"]
 
 [resource]
 shader = ExtResource("1_4mi0u")

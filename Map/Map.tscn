@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://de53ukdqyusan"]
 
-[ext_resource type="PackedScene" uid="uid://cvaqp7ospqa5b" path="res://Background/Ocean/oceanTile.tscn" id="1_mjk3f"]
-[ext_resource type="PackedScene" uid="uid://bv30que1oi0y3" path="res://Background/Terrain block/terrainblock.tscn" id="2_1gic2"]
+[ext_resource type="PackedScene" uid="uid://cvaqp7ospqa5b" path="res://Map/Ocean/oceanTile.tscn" id="1_mjk3f"]
+[ext_resource type="PackedScene" uid="uid://bv30que1oi0y3" path="res://Map/Terrain block/terrainblock.tscn" id="2_1gic2"]
 
 [sub_resource type="TileSetScenesCollectionSource" id="TileSetScenesCollectionSource_dm1t2"]
 scenes/1/scene = ExtResource("1_mjk3f")

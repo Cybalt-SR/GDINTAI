@@ -20,10 +20,9 @@ func _onpress():
 		if playerEnabled[playerindex].button_pressed:
 			var teamName := Global.universalTeamNames[playerindex];
 			
-			if playerControlType[playerindex].value == 0:
-				playerDict[teamName] = "PLAYER";
-			else:
-				playerDict[teamName] = "AI";
+			var controlType := playerControlType[playerindex];
+			var valueIndex := controlType.value;
+			playerDict[teamName] = controlType.get_popup().get_item_text(valueIndex);
 				
 			unitList.append(playerindex);
 	

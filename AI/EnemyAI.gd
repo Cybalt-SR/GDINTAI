@@ -4,6 +4,9 @@ class_name UnitAI
 @export var teamName:String
 @export var gameBoard:GameBoard;
 
+@export var defensiveness := 1.0;
+@export var aggressiveness := 1.0;
+
 var pathfinder:PathFinder:
 	get:
 		return gameBoard._unit_path._pathfinder;
@@ -22,6 +25,9 @@ func _process(delta):
 		for aiUnit in aiTeam:
 			if(aiUnit.move_range == 0):
 				aiBases.append(aiUnit);
+		
+		var highestDefensePriority := 0;
+		var highestAttackPriority := 0;
 		
 		for targetTeamName in gameBoard._teams:
 			if(targetTeamName == teamName):
@@ -44,7 +50,10 @@ func _process(delta):
 						var curDist := _get_path_length(target.cell, aiBase.cell);
 						if(curDist < distToNearestBase):
 							distToNearestBase = curDist;
-					priorityDictionary[target.cell] = 150.0 / distToNearestBase / aiBases.size();
+					var prio := (150.0 * defensiveness) / distToNearestBase / aiBases.size();
+					priorityDictionary[target.cell] = prio;
+					if(prio > highestDefensePriority):
+						highestDefensePriority = prio;
 			#attack priority check
 			for targetBase in targetBases:
 				var distToNearestPlayer := 1000.0;
@@ -54,10 +63,18 @@ func _process(delta):
 						if(curDist < distToNearestPlayer):
 							distToNearestPlayer = curDist;
 				if(!isneutralteam):
-					priorityDictionary[targetBase.cell] = 100.0 / distToNearestPlayer / (targetBases.size() * 0.5);
+					var prio := (100.0 * aggressiveness) / distToNearestPlayer / (targetBases.size() * 0.5)
+					priorityDictionary[targetBase.cell] = prio;
+					if(prio > highestAttackPriority):
+						highestAttackPriority = prio;
 				else:
-					priorityDictionary[targetBase.cell] = 10.0 / distToNearestPlayer * targetBase.targetPriorityMod;
-				
+					priorityDictionary[targetBase.cell] = 50.0 / distToNearestPlayer;
+			#weight priority by mod
+			for target:Unit in targetTeam:
+				priorityDictionary[target.cell] *= target.targetPriorityMod;
+				priorityDictionary[target.cell] += highestAttackPriority * target.targetPriorityMod_attack;
+				priorityDictionary[target.cell] += highestDefensePriority * target.targetPriorityMod_defend;
+			
 		#weight priority by distance
 		for key in priorityDictionary:
 			var distanceToHere := 1000.0;

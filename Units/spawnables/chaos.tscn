@@ -1,7 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://bmthh4loipqyc"]
+[gd_scene load_steps=8 format=3 uid="uid://c2x7g46kq0x62"]
 
-[ext_resource type="Script" path="res://Units/spawnables/mine.gd" id="1_s4wxd"]
-[ext_resource type="Texture2D" uid="uid://cnuo4qrarncmv" path="res://Units/Images/mine.png" id="2_5ox8v"]
+[ext_resource type="Script" path="res://Units/spawnables/chaos.gd" id="1_dtrlq"]
+[ext_resource type="Texture2D" uid="uid://cq0m1d3ttgs4s" path="res://Units/Images/chaos.png" id="2_cqpjw"]
 
 [sub_resource type="Gradient" id="Gradient_frhgj"]
 interpolation_mode = 2
@@ -51,20 +51,20 @@ _data = {
 }
 
 [node name="Unit" type="Path2D"]
-script = ExtResource("1_s4wxd")
-targetPriorityMod = -1.0
-targetPriorityMod_defend = 0.2
+script = ExtResource("1_dtrlq")
+targetPriorityMod = 0.5
+targetPriorityMod_attack = 0.4
 teamName = "spawn"
 move_range = 0
-skin = ExtResource("2_5ox8v")
-lightColor = Color(1.42353, 0, 0, 1)
-lightSize = 1.955
+skin = ExtResource("2_cqpjw")
+lightColor = Color(8.02745, 0, 1.66275, 0.690196)
+lightSize = 1.84
 
 [node name="PathFollow2D" type="PathFollow2D" parent="."]
 loop = false
 
 [node name="Sprite" type="Sprite2D" parent="PathFollow2D"]
-scale = Vector2(1.135, 1.135)
+scale = Vector2(0.51, 0.51)
 
 [node name="PointLight2D" type="PointLight2D" parent="PathFollow2D"]
 energy = 0.8

@@ -76,11 +76,16 @@ func _spawnPlayer(team:String, pos:Vector2, bases:Array[Unit]):
 	
 	gameBoard.add_child(instance);
 	
-func _spawnAI(team:String):
+func _spawnAI(team:String, type:String):
 	var instance := AIfab.instantiate() as UnitAI;
 	
 	instance.teamName = team;
 	instance.gameBoard = gameBoard;
+	
+	if(type == "AI_DEFENSIVE"):
+		instance.defensiveness = 3.0;
+	if(type == "AI_AGGRESSIVE"):
+		instance.aggressiveness = 3.0;
 	
 	add_child(instance);
 
@@ -114,8 +119,8 @@ func _InitGame(teamControl:Dictionary, teamColors:Dictionary, playerList:Array[i
 			if(player == teamIndex && basePoses.size() > 0):
 				_spawnPlayer(teamName, _pop_pos(basePoses), bases);
 		
-		if(_teamControl[teamName] == "AI"):
-			_spawnAI(teamName);
+		if(_teamControl[teamName] != "PLAYER"):
+			_spawnAI(teamName, _teamControl[teamName]);
 		
 		teamIndex += 1;
 	

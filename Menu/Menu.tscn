@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://dkpgq0sf5csph"]
+[gd_scene load_steps=9 format=3 uid="uid://dkpgq0sf5csph"]
 
 [ext_resource type="Texture2D" uid="uid://deua1ft5ncsmp" path="res://Menu/StarSubbackground.png" id="1_m430y"]
 [ext_resource type="Texture2D" uid="uid://vscm7un7n6tw" path="res://Menu/StarSub.png" id="2_7pgfb"]
 [ext_resource type="Texture2D" uid="uid://cbovciab53yd8" path="res://Menu/button.png" id="3_8wkpc"]
 [ext_resource type="Script" path="res://Menu/EnablerButton.gd" id="3_k01au"]
 [ext_resource type="Script" path="res://Menu/DataSelector.gd" id="4_wntun"]
+[ext_resource type="Script" path="res://Menu/QuitButton.gd" id="5_x171f"]
 [ext_resource type="Script" path="res://Menu/GameStarterButton.gd" id="6_08i3s"]
 [ext_resource type="PackedScene" uid="uid://30jb4kc5kf5p" path="res://Main.tscn" id="7_g8e13"]
 
@@ -51,10 +52,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -158.0
-offset_top = 86.31
-offset_right = 158.0
-offset_bottom = 169.31
+offset_left = -323.0
+offset_top = 87.0
+offset_right = -7.0
+offset_bottom = 170.0
 grow_horizontal = 2
 grow_vertical = 2
 text = "PLAY"
@@ -64,6 +65,33 @@ toEnable = [NodePath("../../GameStart")]
 toDisable = [NodePath("..")]
 
 [node name="TextureRect" type="TextureRect" parent="Home/Play Button"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_8wkpc")
+expand_mode = 3
+
+[node name="Quit Button" type="Button" parent="Home"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.0
+offset_top = 87.0
+offset_right = 312.0
+offset_bottom = 170.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "QUIT"
+flat = true
+script = ExtResource("5_x171f")
+
+[node name="TextureRect" type="TextureRect" parent="Home/Quit Button"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -120,11 +148,15 @@ text = "[PLAYER1]"
 layout_mode = 2
 text = "CONTROL TYPE"
 switch_on_hover = true
-item_count = 2
+item_count = 4
 popup/item_0/text = "PLAYER"
 popup/item_0/id = 0
-popup/item_1/text = "AI"
+popup/item_1/text = "AI_DEFENSIVE"
 popup/item_1/id = 1
+popup/item_2/text = "AI_AGGRESSIVE"
+popup/item_2/id = 2
+popup/item_3/text = "AI_SMART"
+popup/item_3/id = 3
 script = ExtResource("4_wntun")
 label = "CONTROL TYPE"
 
@@ -144,11 +176,15 @@ text = "[PLAYER2]"
 layout_mode = 2
 text = "CONTROL TYPE"
 switch_on_hover = true
-item_count = 2
+item_count = 4
 popup/item_0/text = "PLAYER"
 popup/item_0/id = 0
-popup/item_1/text = "AI"
+popup/item_1/text = "AI_DEFENSIVE"
 popup/item_1/id = 1
+popup/item_2/text = "AI_AGGRESSIVE"
+popup/item_2/id = 2
+popup/item_3/text = "AI_SMART"
+popup/item_3/id = 3
 script = ExtResource("4_wntun")
 label = "CONTROL TYPE"
 
@@ -168,11 +204,15 @@ text = "[PLAYER3]"
 layout_mode = 2
 text = "CONTROL TYPE"
 switch_on_hover = true
-item_count = 2
+item_count = 4
 popup/item_0/text = "PLAYER"
 popup/item_0/id = 0
-popup/item_1/text = "AI"
+popup/item_1/text = "AI_DEFENSIVE"
 popup/item_1/id = 1
+popup/item_2/text = "AI_AGGRESSIVE"
+popup/item_2/id = 2
+popup/item_3/text = "AI_SMART"
+popup/item_3/id = 3
 script = ExtResource("4_wntun")
 label = "CONTROL TYPE"
 
@@ -192,11 +232,15 @@ text = "[PLAYER4]"
 layout_mode = 2
 text = "CONTROL TYPE"
 switch_on_hover = true
-item_count = 2
+item_count = 4
 popup/item_0/text = "PLAYER"
 popup/item_0/id = 0
-popup/item_1/text = "AI"
+popup/item_1/text = "AI_DEFENSIVE"
 popup/item_1/id = 1
+popup/item_2/text = "AI_AGGRESSIVE"
+popup/item_2/id = 2
+popup/item_3/text = "AI_SMART"
+popup/item_3/id = 3
 script = ExtResource("4_wntun")
 label = "CONTROL TYPE"
 

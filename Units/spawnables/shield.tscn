@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://y7huinbktu6x"]
 
 [ext_resource type="Script" path="res://Units/spawnables/shield.gd" id="1_jfhc3"]
-[ext_resource type="Texture2D" uid="uid://cd88se4rh8rtf" path="res://Units/Images/Harden Icon.png" id="2_a81ui"]
+[ext_resource type="Texture2D" uid="uid://dtrq6vf8ufgot" path="res://Units/Images/shield.png" id="2_26mtl"]
 
 [sub_resource type="Gradient" id="Gradient_frhgj"]
 interpolation_mode = 2
@@ -52,9 +52,10 @@ _data = {
 
 [node name="Unit" type="Path2D"]
 script = ExtResource("1_jfhc3")
+targetPriorityMod_defend = 0.5
 teamName = "spawn"
 move_range = 0
-skin = ExtResource("2_a81ui")
+skin = ExtResource("2_26mtl")
 lightColor = Color(0, 0.71, 2.958, 1)
 lightSize = 1.28
 
@@ -62,7 +63,6 @@ lightSize = 1.28
 loop = false
 
 [node name="Sprite" type="Sprite2D" parent="PathFollow2D"]
-rotation = -1.5708
 scale = Vector2(2.125, 2.125)
 
 [node name="PointLight2D" type="PointLight2D" parent="PathFollow2D"]

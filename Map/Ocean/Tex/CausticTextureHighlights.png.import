@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bjlgwsu2foei0"
-path="res://.godot/imported/CausticTextureHighlights.png-5e0e540e53949260c6332b06517cce11.ctex"
+path="res://.godot/imported/CausticTextureHighlights.png-0a17c0e8c0c110239d021ef912f52d7a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Background/Ocean/Tex/CausticTextureHighlights.png"
-dest_files=["res://.godot/imported/CausticTextureHighlights.png-5e0e540e53949260c6332b06517cce11.ctex"]
+source_file="res://Map/Ocean/Tex/CausticTextureHighlights.png"
+dest_files=["res://.godot/imported/CausticTextureHighlights.png-0a17c0e8c0c110239d021ef912f52d7a.ctex"]
 
 [params]
 
