@@ -30,6 +30,7 @@ map = NodePath("")
 [node name="Lights" type="Node" parent="."]
 
 [node name="DirectionalLight2D" type="DirectionalLight2D" parent="Lights"]
+visible = false
 position = Vector2(-970, -170)
 energy = 1.05
 blend_mode = 1
