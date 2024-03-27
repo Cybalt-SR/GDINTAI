@@ -1,6 +1,7 @@
 extends Button
 
 @export var gameScene:PackedScene;
+@export var mapChoices:Array[PackedScene];
 
 @export var playerEnabled:Array[CheckButton];
 @export var playerControlType:Array[Data_Selector];
@@ -29,6 +30,7 @@ func _onpress():
 	Global.playerDict = playerDict;
 	Global.unitList = unitList;
 	Global.baseCount = baseNumberSelect.value + 1;
+	Global.mapChoice = mapChoices[levelSelect.value];
 	
 	get_tree().change_scene_to_packed(gameScene);
 	pass;

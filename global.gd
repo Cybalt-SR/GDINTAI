@@ -17,3 +17,4 @@ universalTeamNames[2]: Color.AQUAMARINE * 0.7,
 universalTeamNames[3]: Color.BLUE * 1,
 }
 var baseCount:int;
+var mapChoice:PackedScene;

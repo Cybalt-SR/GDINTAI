@@ -92,6 +92,9 @@ func _spawnAI(team:String, type:String):
 func _InitGame(teamControl:Dictionary, teamColors:Dictionary, playerList:Array[int], baseCount:int):
 	isEvE = true;
 	
+	var mapInstance := Global.mapChoice.instantiate();
+	add_child(mapInstance);
+	
 	for controllerIndex in teamControl:
 		if(teamControl[controllerIndex] == "PLAYER"):
 			isEvE = false;
