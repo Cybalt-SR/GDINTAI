@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://30jb4kc5kf5p"]
+[gd_scene load_steps=18 format=3 uid="uid://30jb4kc5kf5p"]
 
 [ext_resource type="PackedScene" uid="uid://bv1ul1qynrdwd" path="res://GameBoard/Cursor/Cursor.tscn" id="1"]
 [ext_resource type="Script" path="res://GameBoard/GameLoader.gd" id="1_5ofvb"]
@@ -13,6 +13,10 @@
 [ext_resource type="PackedScene" uid="uid://de53ukdqyusan" path="res://Background/Map.tscn" id="10"]
 [ext_resource type="Texture2D" uid="uid://cbhjd5eod53hg" path="res://Units/Images/P Base/Boat3_water_frame1.png" id="10_af7cv"]
 [ext_resource type="PackedScene" uid="uid://y7huinbktu6x" path="res://Units/spawnables/shield.tscn" id="10_g4l6l"]
+[ext_resource type="Material" uid="uid://bbwa7cvycmfsb" path="res://unshadedUiMat.tres" id="14_7t6mo"]
+[ext_resource type="Script" path="res://UIController.gd" id="14_t3wxj"]
+[ext_resource type="Script" path="res://Menu/SceneButton.gd" id="16_tsfqb"]
+[ext_resource type="Texture2D" uid="uid://cbovciab53yd8" path="res://Menu/button.png" id="17_fbpte"]
 
 [node name="Main" type="Node2D" node_paths=PackedStringArray("gameBoard", "map")]
 script = ExtResource("1_5ofvb")
@@ -29,6 +33,7 @@ map = NodePath("Map")
 position = Vector2(-970, -170)
 energy = 1.05
 blend_mode = 1
+range_z_max = 1
 max_distance = 1000.0
 
 [node name="Map" parent="." instance=ExtResource("10")]
@@ -53,6 +58,81 @@ z_index = 2
 position = Vector2(-970, -170)
 anchor_mode = 0
 zoom = Vector2(0.325, 0.325)
+
+[node name="UI" type="Control" parent="." node_paths=PackedStringArray("gameBoard", "gameLoader", "infoLabel", "winnerLabel")]
+material = ExtResource("14_7t6mo")
+layout_mode = 3
+anchors_preset = 0
+offset_left = -950.0
+offset_top = -155.0
+offset_right = 2558.0
+offset_bottom = 1826.0
+mouse_filter = 2
+script = ExtResource("14_t3wxj")
+gameBoard = NodePath("../GameBoard")
+gameLoader = NodePath("..")
+infoLabel = NodePath("Label")
+winnerLabel = NodePath("Winner Text")
+
+[node name="Label" type="Label" parent="UI"]
+material = ExtResource("14_7t6mo")
+use_parent_material = true
+layout_mode = 1
+offset_right = 911.0
+offset_bottom = 125.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 91
+text = "Current Turn : Green"
+
+[node name="Winner Text" type="Label" parent="UI"]
+visible = false
+material = ExtResource("14_7t6mo")
+use_parent_material = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -455.5
+offset_top = -62.5
+offset_right = 455.5
+offset_bottom = 62.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 316
+text = "Winner: Green!"
+horizontal_alignment = 1
+
+[node name="Exit Button" type="Button" parent="UI"]
+use_parent_material = true
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -549.0
+offset_top = -197.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 101
+text = "EXIT"
+flat = true
+script = ExtResource("16_tsfqb")
+sceneTo = "res://Menu/Menu.tscn"
+
+[node name="TextureRect" type="TextureRect" parent="UI/Exit Button"]
+use_parent_material = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("17_fbpte")
+expand_mode = 3
 
 [connection signal="accept_pressed" from="GameBoard/Cursor" to="GameBoard" method="_on_Cursor_accept_pressed"]
 [connection signal="moved" from="GameBoard/Cursor" to="GameBoard" method="_on_Cursor_moved"]

@@ -15,6 +15,8 @@ var _active_unit: Unit
 var _walkable_cells:Array[Vector2] = [];
 var _teams := {};
 var _cur_turn := 0;
+var _turn_timer := 0.0;
+var _turn_maxtime := 5.0;
 
 @onready var _unit_overlay: UnitOverlay = $UnitOverlay
 @onready var _unit_path: UnitPath = $UnitPath
@@ -164,6 +166,17 @@ func _move_active_unit() -> void:
 		if unit.teamName != unitToWalk.teamName:
 			_killUnit(unit);
 	
+	if(_turn_timer < _turn_maxtime):
+		_next_turn();
+	
+func _next_turn():
+	if(_active_unit != null && _active_unit._is_walking == true):
+		return;
+	
+	_deselect_active_unit()
+	_active_unit = null;
+	
+	_turn_timer = 0.0;
 	var foundValidTurner := false;
 	while !foundValidTurner:
 		_cur_turn += 1;
@@ -208,3 +221,9 @@ func _on_Cursor_accept_pressed(cell: Vector2) -> void:
 func _on_Cursor_moved(new_cell: Vector2) -> void:
 	if _active_unit && !_active_unit._is_walking:
 		_unit_path.draw(_active_unit.cell, new_cell, _active_unit.move_range)
+		
+func _process(delta):
+	_turn_timer += delta;
+	
+	if(_turn_timer >= _turn_maxtime):
+		_next_turn();

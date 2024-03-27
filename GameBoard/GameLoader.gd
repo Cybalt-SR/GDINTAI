@@ -1,4 +1,5 @@
 extends Node2D
+class_name GameLoader;
 
 @export var playerSkin:Texture2D;
 @export var baseSkin:Texture2D;
@@ -27,15 +28,10 @@ func _ready():
 	}
 	var oneVoneList:Array[int] = [0,1]
 	var freeFourAllList:Array[int] = [0,1,2,3]
-	var universalColorCode :={
-	"0": Color.GREEN,
-	"1": Color.RED * 3,
-	"2": Color.AQUAMARINE * 2,
-	"3": Color.BLUE * 2,
-	}
 	
+	_InitGame(Global.playerDict, Global.universalColorCode, Global.unitList, Global.baseCount);	
 	#_InitGame(twoplayerdict, universalColorCode, oneVoneList, 5);
-	_InitGame(fourAIdict, universalColorCode, freeFourAllList, 5);	
+	#_InitGame(fourAIdict, universalColorCode, freeFourAllList, 5);	
 
 func _pop_pos(from:Array[Vector2]) -> Vector2:
 	var randomIndex := randi_range(0, from.size() - 1);
@@ -75,6 +71,8 @@ func _spawnPlayer(team:String, pos:Vector2, bases:Array[Unit]):
 	
 	if(_teamControl[team] == "PLAYER" || isEvE):
 		instance.lightSize = 8;
+	else:
+		instance.lightSize = 0;
 	
 	gameBoard.add_child(instance);
 	
@@ -123,4 +121,5 @@ func _InitGame(teamControl:Dictionary, teamColors:Dictionary, playerList:Array[i
 	
 	gameBoard._reinitialize();
 	
+	loadedin = true;
 	pass;

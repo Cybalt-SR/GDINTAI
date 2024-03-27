@@ -1,9 +1,12 @@
-[gd_scene load_steps=5 format=3 uid="uid://dkpgq0sf5csph"]
+[gd_scene load_steps=8 format=3 uid="uid://dkpgq0sf5csph"]
 
 [ext_resource type="Texture2D" uid="uid://deua1ft5ncsmp" path="res://Menu/StarSubbackground.png" id="1_m430y"]
 [ext_resource type="Texture2D" uid="uid://vscm7un7n6tw" path="res://Menu/StarSub.png" id="2_7pgfb"]
 [ext_resource type="Texture2D" uid="uid://cbovciab53yd8" path="res://Menu/button.png" id="3_8wkpc"]
-[ext_resource type="Script" path="res://Menu/SelectionLabel.gd" id="4_jqndw"]
+[ext_resource type="Script" path="res://Menu/EnablerButton.gd" id="3_k01au"]
+[ext_resource type="Script" path="res://Menu/DataSelector.gd" id="4_wntun"]
+[ext_resource type="Script" path="res://Menu/GameStarterButton.gd" id="6_08i3s"]
+[ext_resource type="PackedScene" uid="uid://30jb4kc5kf5p" path="res://Main.tscn" id="7_g8e13"]
 
 [node name="Menu" type="Control"]
 layout_mode = 3
@@ -24,7 +27,6 @@ texture = ExtResource("1_m430y")
 expand_mode = 3
 
 [node name="Home" type="Control" parent="."]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -42,7 +44,7 @@ grow_vertical = 2
 texture = ExtResource("2_7pgfb")
 expand_mode = 3
 
-[node name="Play Button" type="Button" parent="Home"]
+[node name="Play Button" type="Button" parent="Home" node_paths=PackedStringArray("toEnable", "toDisable")]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -57,6 +59,9 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "PLAY"
 flat = true
+script = ExtResource("3_k01au")
+toEnable = [NodePath("../../GameStart")]
+toDisable = [NodePath("..")]
 
 [node name="TextureRect" type="TextureRect" parent="Home/Play Button"]
 layout_mode = 1
@@ -69,6 +74,7 @@ texture = ExtResource("3_8wkpc")
 expand_mode = 3
 
 [node name="GameStart" type="Control" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -102,6 +108,8 @@ size_flags_horizontal = 4
 
 [node name="CheckButton" type="CheckButton" parent="GameStart/Primary Menu/1"]
 layout_mode = 2
+disabled = true
+button_pressed = true
 
 [node name="Label" type="Label" parent="GameStart/Primary Menu/1"]
 layout_mode = 2
@@ -110,20 +118,87 @@ text = "[PLAYER1]"
 
 [node name="Control Select" type="MenuButton" parent="GameStart/Primary Menu/1"]
 layout_mode = 2
-text = "CONTROL TYPE:"
+text = "CONTROL TYPE"
 switch_on_hover = true
 item_count = 2
 popup/item_0/text = "PLAYER"
 popup/item_0/id = 0
 popup/item_1/text = "AI"
 popup/item_1/id = 1
+script = ExtResource("4_wntun")
+label = "CONTROL TYPE"
 
-[node name="ControlTypeLabel" type="Label" parent="GameStart/Primary Menu/1" node_paths=PackedStringArray("selector")]
+[node name="2" type="HBoxContainer" parent="GameStart/Primary Menu"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="CheckButton" type="CheckButton" parent="GameStart/Primary Menu/2"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="GameStart/Primary Menu/2"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 40
-text = "AI"
-script = ExtResource("4_jqndw")
-selector = NodePath("../Control Select")
+text = "[PLAYER2]"
+
+[node name="Control Select" type="MenuButton" parent="GameStart/Primary Menu/2"]
+layout_mode = 2
+text = "CONTROL TYPE"
+switch_on_hover = true
+item_count = 2
+popup/item_0/text = "PLAYER"
+popup/item_0/id = 0
+popup/item_1/text = "AI"
+popup/item_1/id = 1
+script = ExtResource("4_wntun")
+label = "CONTROL TYPE"
+
+[node name="3" type="HBoxContainer" parent="GameStart/Primary Menu"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="CheckButton" type="CheckButton" parent="GameStart/Primary Menu/3"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="GameStart/Primary Menu/3"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "[PLAYER3]"
+
+[node name="Control Select" type="MenuButton" parent="GameStart/Primary Menu/3"]
+layout_mode = 2
+text = "CONTROL TYPE"
+switch_on_hover = true
+item_count = 2
+popup/item_0/text = "PLAYER"
+popup/item_0/id = 0
+popup/item_1/text = "AI"
+popup/item_1/id = 1
+script = ExtResource("4_wntun")
+label = "CONTROL TYPE"
+
+[node name="4" type="HBoxContainer" parent="GameStart/Primary Menu"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="CheckButton" type="CheckButton" parent="GameStart/Primary Menu/4"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="GameStart/Primary Menu/4"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "[PLAYER4]"
+
+[node name="Control Select" type="MenuButton" parent="GameStart/Primary Menu/4"]
+layout_mode = 2
+text = "CONTROL TYPE"
+switch_on_hover = true
+item_count = 2
+popup/item_0/text = "PLAYER"
+popup/item_0/id = 0
+popup/item_1/text = "AI"
+popup/item_1/id = 1
+script = ExtResource("4_wntun")
+label = "CONTROL TYPE"
 
 [node name="Level Label" type="Label" parent="GameStart/Primary Menu"]
 layout_mode = 2
@@ -139,21 +214,20 @@ size_flags_horizontal = 4
 layout_mode = 2
 text = "Base # per Player: "
 switch_on_hover = true
-item_count = 3
+item_count = 5
 popup/item_0/text = "1"
 popup/item_0/id = 0
 popup/item_1/text = "2"
 popup/item_1/id = 1
 popup/item_2/text = "3"
 popup/item_2/id = 2
-
-[node name="Number Label" type="Label" parent="GameStart/Primary Menu/Base Number Select" node_paths=PackedStringArray("selector")]
-layout_mode = 2
-theme_override_font_sizes/font_size = 40
-text = "3
-"
-script = ExtResource("4_jqndw")
-selector = NodePath("../Number Select")
+popup/item_3/text = "4"
+popup/item_3/id = 3
+popup/item_4/text = "5"
+popup/item_4/id = 4
+script = ExtResource("4_wntun")
+label = "Base # per Player"
+value = 2
 
 [node name="Level Select" type="HBoxContainer" parent="GameStart/Primary Menu"]
 layout_mode = 2
@@ -170,15 +244,10 @@ popup/item_1/text = "Orbital"
 popup/item_1/id = 1
 popup/item_2/text = "4 Corners"
 popup/item_2/id = 2
+script = ExtResource("4_wntun")
+label = "Level Type"
 
-[node name="ControlTypeLabel" type="Label" parent="GameStart/Primary Menu/Level Select" node_paths=PackedStringArray("selector")]
-layout_mode = 2
-theme_override_font_sizes/font_size = 40
-text = "Default Maze"
-script = ExtResource("4_jqndw")
-selector = NodePath("../Level Select")
-
-[node name="Back" type="Button" parent="GameStart"]
+[node name="Back" type="Button" parent="GameStart" node_paths=PackedStringArray("toEnable", "toDisable")]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -193,6 +262,9 @@ grow_horizontal = 2
 grow_vertical = 0
 text = "BACK"
 flat = true
+script = ExtResource("3_k01au")
+toEnable = [NodePath("../../Home")]
+toDisable = [NodePath("..")]
 
 [node name="TextureRect" type="TextureRect" parent="GameStart/Back"]
 layout_mode = 1
@@ -204,7 +276,7 @@ grow_vertical = 2
 texture = ExtResource("3_8wkpc")
 expand_mode = 3
 
-[node name="Start" type="Button" parent="GameStart"]
+[node name="Start" type="Button" parent="GameStart" node_paths=PackedStringArray("playerEnabled", "playerControlType", "baseNumberSelect", "levelSelect")]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -219,6 +291,12 @@ grow_horizontal = 2
 grow_vertical = 0
 text = "START"
 flat = true
+script = ExtResource("6_08i3s")
+gameScene = ExtResource("7_g8e13")
+playerEnabled = [NodePath("../Primary Menu/1/CheckButton"), NodePath("../Primary Menu/2/CheckButton"), NodePath("../Primary Menu/3/CheckButton"), NodePath("../Primary Menu/4/CheckButton")]
+playerControlType = [NodePath("../Primary Menu/1/Control Select"), NodePath("../Primary Menu/2/Control Select"), NodePath("../Primary Menu/3/Control Select"), NodePath("../Primary Menu/4/Control Select")]
+baseNumberSelect = NodePath("../Primary Menu/Base Number Select/Number Select")
+levelSelect = NodePath("../Primary Menu/Level Select/Level Select")
 
 [node name="TextureRect" type="TextureRect" parent="GameStart/Start"]
 layout_mode = 1
