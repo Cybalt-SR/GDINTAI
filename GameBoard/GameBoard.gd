@@ -93,7 +93,8 @@ func _killUnit(unit:Unit):
 	if(validRespawnPoints.size() > 0):
 		var randomChoice:int = randi_range(0, validRespawnPoints.size() - 1);
 		var chosenBase := validRespawnPoints[randomChoice];
-		unit.goToCell(chosenBase.cell);
+		unit.cell = chosenBase.cell;
+		unit.position = grid.calculate_map_position(chosenBase.cell);
 	else:
 		_teams[unit.teamName].erase(unit);
 		
@@ -152,8 +153,10 @@ func _move_active_unit() -> void:
 	
 	var unitToWalk := _active_unit;
 	_deselect_active_unit()
+	
 	unitToWalk.walk_along(_unit_path.current_path)
 	await unitToWalk.walk_finished
+	_active_unit = null;
 	new_cell = unitToWalk.cell;
 	
 	var unitsHere = _get_units_at_cell(new_cell);
@@ -172,12 +175,12 @@ func _move_active_unit() -> void:
 		foundValidTurner = _teams[_get_current_team_turn()].size() > 0;
 		if(_get_current_team_turn() == "spawn"):
 			foundValidTurner = false;
+			
 
 ## Deselects the active unit, clearing the cells overlay and interactive path drawing.
 func _deselect_active_unit() -> void:
 	_unit_overlay.clear()
 	_unit_path.stop()
-	_active_unit = null
 
 ## Selects or moves a unit based on where the cursor is.
 func _on_Cursor_accept_pressed(cell: Vector2) -> void:
@@ -197,11 +200,11 @@ func _on_Cursor_accept_pressed(cell: Vector2) -> void:
 			
 			_active_unit = unitHere
 			return;
-	else:
+	elif(_active_unit._is_walking == false):
 		_move_active_unit()
 
 
 ## Updates the interactive path's drawing if there's an active and selected unit.
 func _on_Cursor_moved(new_cell: Vector2) -> void:
-	if _active_unit:
+	if _active_unit && !_active_unit._is_walking:
 		_unit_path.draw(_active_unit.cell, new_cell, _active_unit.move_range)

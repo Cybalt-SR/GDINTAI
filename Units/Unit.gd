@@ -7,6 +7,7 @@ signal killed(by:Unit);
 signal stepover(by:Unit);
 
 var gameBoard:GameBoard;
+@export var targetPriorityMod:float = 1;
 @export var teamName:String;
 @export var grid: Grid
 @export var move_range := 6
@@ -40,12 +41,7 @@ var gameBoard:GameBoard;
 ## Coordinates of the current cell the cursor moved to.
 var cell := Vector2.ZERO:
 	set(value):
-		# When changing the cell's value, we don't want to allow coordinates outside
-		#	the grid, so we clamp them
 		cell = grid.grid_clamp(value)
-		position = grid.calculate_map_position(cell)
-	get:
-		return grid.calculate_grid_coordinates(position);
 var _is_walking := false;
 var _timeInvulnerable := 0.0;
 
@@ -54,6 +50,7 @@ var _timeInvulnerable := 0.0;
 @onready var _anim_player: AnimationPlayer = $AnimationPlayer
 @onready var _path_follow: PathFollow2D = $PathFollow2D
 @onready var _shield_collider: CollisionShape2D = $StaticBody2D/CollisionShape2D;
+@onready var _shield_icon: Sprite2D = $StaticBody2D/CollisionShape2D/Sprite;
 
 func _ready() -> void:
 	_path_follow.rotates = true
@@ -70,8 +67,9 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	_timeInvulnerable -= delta;
 	
-	if(_shield_collider != null):
+	if(_shield_collider != null && _shield_icon != null):
 		_shield_collider.disabled = _timeInvulnerable <= 0;
+		_shield_icon.set_visible(!_shield_collider.disabled);
 	
 	if(_is_walking):
 		_path_follow.progress += move_speed * delta
@@ -83,8 +81,8 @@ func _process(delta: float) -> void:
 		if _path_follow.progress_ratio >= 1.0:
 			_is_walking = false
 			# Setting this value to 0.0 causes a Zero Length Interval error
+			position = grid.calculate_map_position(cell);
 			_path_follow.progress = 0.00001
-			position = grid.calculate_map_position(cell)
 			curve.clear_points()
 			walk_finished.emit()
 
@@ -95,9 +93,12 @@ func _process(delta: float) -> void:
 func walk_along(path: PackedVector2Array) -> void:
 	if path.is_empty():
 		return
-
+	
+	cell = path[-1];
+	
+	curve.clear_points();
 	curve.add_point(Vector2.ZERO)
 	for point in path:
 		curve.add_point(grid.calculate_map_position(point) - position)
-	cell = path[-1]
+	_path_follow.progress = 0.0001;
 	_is_walking = true

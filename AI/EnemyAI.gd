@@ -44,7 +44,7 @@ func _process(delta):
 						var curDist := _get_path_length(target.cell, aiBase.cell);
 						if(curDist < distToNearestBase):
 							distToNearestBase = curDist;
-					priorityDictionary[target.cell] = 100.0 / distToNearestBase / aiBases.size();
+					priorityDictionary[target.cell] = 150.0 / distToNearestBase / aiBases.size();
 			#attack priority check
 			for targetBase in targetBases:
 				var distToNearestPlayer := 1000.0;
@@ -54,9 +54,9 @@ func _process(delta):
 						if(curDist < distToNearestPlayer):
 							distToNearestPlayer = curDist;
 				if(!isneutralteam):
-					priorityDictionary[targetBase.cell] = 100.0 / distToNearestPlayer / targetBases.size();
+					priorityDictionary[targetBase.cell] = 100.0 / distToNearestPlayer / (targetBases.size() * 0.5);
 				else:
-					priorityDictionary[targetBase.cell] = 60.0 / distToNearestPlayer;
+					priorityDictionary[targetBase.cell] = 10.0 / distToNearestPlayer * targetBase.targetPriorityMod;
 				
 		#weight priority by distance
 		for key in priorityDictionary:
@@ -66,7 +66,7 @@ func _process(delta):
 					var curDist := _get_path_length(aiUnit.cell, key);
 					if(curDist < distanceToHere):
 						distanceToHere = curDist;
-			priorityDictionary[key] += 500.0 / distanceToHere;	
+			priorityDictionary[key] *= minf(1.0, 10.0 / distanceToHere);
 		
 		#prune all positions in which there is no need to move
 		for key in priorityDictionary:
@@ -80,7 +80,7 @@ func _process(delta):
 		
 		for key in priorityDictionary:
 			var thisPrio:float = priorityDictionary[key];
-			if(thisPrio > highestPriority):
+			if(thisPrio > highestPriority && !gameBoard.is_occupied(key)):
 				mostPrioritizedPosition = key;
 				highestPriority = thisPrio;
 				

@@ -52,6 +52,7 @@ _data = {
 
 [node name="Unit" type="Path2D"]
 script = ExtResource("1_s4wxd")
+targetPriorityMod = -1.0
 teamName = "spawn"
 move_range = 0
 skin = ExtResource("2_ksv5p")

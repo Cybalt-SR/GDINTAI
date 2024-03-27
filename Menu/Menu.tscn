@@ -1,0 +1,231 @@
+[gd_scene load_steps=5 format=3 uid="uid://dkpgq0sf5csph"]
+
+[ext_resource type="Texture2D" uid="uid://deua1ft5ncsmp" path="res://Menu/StarSubbackground.png" id="1_m430y"]
+[ext_resource type="Texture2D" uid="uid://vscm7un7n6tw" path="res://Menu/StarSub.png" id="2_7pgfb"]
+[ext_resource type="Texture2D" uid="uid://cbovciab53yd8" path="res://Menu/button.png" id="3_8wkpc"]
+[ext_resource type="Script" path="res://Menu/SelectionLabel.gd" id="4_jqndw"]
+
+[node name="Menu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_m430y")
+expand_mode = 3
+
+[node name="Home" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="Home"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_7pgfb")
+expand_mode = 3
+
+[node name="Play Button" type="Button" parent="Home"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -158.0
+offset_top = 86.31
+offset_right = 158.0
+offset_bottom = 169.31
+grow_horizontal = 2
+grow_vertical = 2
+text = "PLAY"
+flat = true
+
+[node name="TextureRect" type="TextureRect" parent="Home/Play Button"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_8wkpc")
+expand_mode = 3
+
+[node name="GameStart" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Primary Menu" type="VBoxContainer" parent="GameStart"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -576.0
+offset_top = -27.5
+offset_right = 576.0
+offset_bottom = 27.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Players label" type="Label" parent="GameStart/Primary Menu"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Player Setup"
+horizontal_alignment = 1
+
+[node name="1" type="HBoxContainer" parent="GameStart/Primary Menu"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="CheckButton" type="CheckButton" parent="GameStart/Primary Menu/1"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="GameStart/Primary Menu/1"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "[PLAYER1]"
+
+[node name="Control Select" type="MenuButton" parent="GameStart/Primary Menu/1"]
+layout_mode = 2
+text = "CONTROL TYPE:"
+switch_on_hover = true
+item_count = 2
+popup/item_0/text = "PLAYER"
+popup/item_0/id = 0
+popup/item_1/text = "AI"
+popup/item_1/id = 1
+
+[node name="ControlTypeLabel" type="Label" parent="GameStart/Primary Menu/1" node_paths=PackedStringArray("selector")]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "AI"
+script = ExtResource("4_jqndw")
+selector = NodePath("../Control Select")
+
+[node name="Level Label" type="Label" parent="GameStart/Primary Menu"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Level Setup"
+horizontal_alignment = 1
+
+[node name="Base Number Select" type="HBoxContainer" parent="GameStart/Primary Menu"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Number Select" type="MenuButton" parent="GameStart/Primary Menu/Base Number Select"]
+layout_mode = 2
+text = "Base # per Player: "
+switch_on_hover = true
+item_count = 3
+popup/item_0/text = "1"
+popup/item_0/id = 0
+popup/item_1/text = "2"
+popup/item_1/id = 1
+popup/item_2/text = "3"
+popup/item_2/id = 2
+
+[node name="Number Label" type="Label" parent="GameStart/Primary Menu/Base Number Select" node_paths=PackedStringArray("selector")]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "3
+"
+script = ExtResource("4_jqndw")
+selector = NodePath("../Number Select")
+
+[node name="Level Select" type="HBoxContainer" parent="GameStart/Primary Menu"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Level Select" type="MenuButton" parent="GameStart/Primary Menu/Level Select"]
+layout_mode = 2
+text = "Level Type: "
+switch_on_hover = true
+item_count = 3
+popup/item_0/text = "Even Maze"
+popup/item_0/id = 0
+popup/item_1/text = "Orbital"
+popup/item_1/id = 1
+popup/item_2/text = "4 Corners"
+popup/item_2/id = 2
+
+[node name="ControlTypeLabel" type="Label" parent="GameStart/Primary Menu/Level Select" node_paths=PackedStringArray("selector")]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "Default Maze"
+script = ExtResource("4_jqndw")
+selector = NodePath("../Level Select")
+
+[node name="Back" type="Button" parent="GameStart"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -155.0
+offset_top = -76.0
+offset_right = -40.0
+offset_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "BACK"
+flat = true
+
+[node name="TextureRect" type="TextureRect" parent="GameStart/Back"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_8wkpc")
+expand_mode = 3
+
+[node name="Start" type="Button" parent="GameStart"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 64.5
+offset_top = -76.0
+offset_right = 179.5
+offset_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "START"
+flat = true
+
+[node name="TextureRect" type="TextureRect" parent="GameStart/Start"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_8wkpc")
+expand_mode = 3

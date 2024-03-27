@@ -29,12 +29,13 @@ func _ready():
 	var freeFourAllList:Array[int] = [0,1,2,3]
 	var universalColorCode :={
 	"0": Color.GREEN,
-	"1": Color.RED,
-	"2": Color.YELLOW,
-	"3": Color.VIOLET,
+	"1": Color.RED * 3,
+	"2": Color.AQUAMARINE * 2,
+	"3": Color.BLUE * 2,
 	}
 	
-	_InitGame(fourAIdict, universalColorCode, freeFourAllList, 5);
+	#_InitGame(twoplayerdict, universalColorCode, oneVoneList, 5);
+	_InitGame(fourAIdict, universalColorCode, freeFourAllList, 5);	
 
 func _pop_pos(from:Array[Vector2]) -> Vector2:
 	var randomIndex := randi_range(0, from.size() - 1);
@@ -67,7 +68,7 @@ func _spawnPlayer(team:String, pos:Vector2, bases:Array[Unit]):
 
 	instance.skin = playerSkin;
 	instance.move_range = 7;
-	instance.move_speed = 2000;
+	instance.move_speed = 1000;
 	
 	instance.z_index = 1;
 	instance.bases = bases;
